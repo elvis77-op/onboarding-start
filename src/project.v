@@ -8,7 +8,6 @@ module tt_um_uwasic_onboarding_elvis (
   output [7:0] uo_out,
   output [7:0] uio_out,
   output [7:0] uio_oe,
-  output [15:0] buffer,
   input [7:0] ui_in
 );
   assign uio_oe = 8'hFF; // Set all IOs to output
