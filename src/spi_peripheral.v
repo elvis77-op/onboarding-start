@@ -16,6 +16,7 @@ module spi_peripheral (
     wire sclk = ui_in[0];
     wire ncs = ui_in[1];
     wire copi = ui_in[2];
+    reg [15:0] buffer = 16'b0;
         // Process SPI protocol in the clk domain
     reg [4:0] bit_counter = 5'b0;
     reg sclk_prev;
