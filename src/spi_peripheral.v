@@ -25,11 +25,8 @@ module spi_peripheral (
     always @(posedge sclk or negedge ncs) begin
         if (!ncs) begin
             if (sclk_posedge) begin
-                
-                end else begin
-                    buffer <= {buffer[14:0], copi};
-                    bit_counter <= bit_counter + 1'b1;
-                end
+                buffer <= {buffer[14:0], copi};
+                bit_counter <= bit_counter + 1'b1;
             end
         end else if (ncs) begin
             if (bit_counter == 4'b16) begin
