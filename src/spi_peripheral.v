@@ -11,8 +11,7 @@ module spi_peripheral (
     output  wire [7:0] en_reg_out_15_8,
     output  wire [7:0] en_reg_pwm_7_0,
     output  wire [7:0] en_reg_pwm_15_8,
-    output  wire [7:0] pwm_duty_cycle,
-    output  reg  [15:0] buffer
+    output  wire [7:0] pwm_duty_cycle
 );
     wire sclk = ui_in[0];
     wire ncs = ui_in[1];
