@@ -17,7 +17,6 @@ module tt_um_uwasic_onboarding_elvis (
   wire [7:0] en_reg_pwm_15_8;
   wire [7:0] pwm_duty_cycle;
   reg [15:0] buffer;
-  wire ncs_posedge = ~ui_in[0] & csn;
   spi_peripheral spi_peripheral_inst (
     .ui_in(ui_in),
     .en_reg_out_7_0(en_reg_out_7_0),
