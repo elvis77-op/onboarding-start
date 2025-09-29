@@ -13,6 +13,16 @@ module spi_peripheral (
     output  wire [7:0] en_reg_pwm_15_8,
     output  wire [7:0] pwm_duty_cycle
 );
+    reg [7:0] en_reg_out_7_0   = 8'b0;
+    reg [7:0] en_reg_out_15_8  = 8'b0;
+    reg [7:0] en_reg_pwm_7_0   = 8'b0;
+    reg [7:0] en_reg_pwm_15_8  = 8'b0;
+    reg [7:0] pwm_duty_cycle   = 8'b0;
+    assign en_reg_out_7_0    = en_reg_out_7_0;
+    assign en_reg_out_15_8   = en_reg_out_15_8;
+    assign en_reg_pwm_7_0    = en_reg_pwm_7_0;
+    assign en_reg_pwm_15_8   = en_reg_pwm_15_8;
+    assign pwm_duty_cycle    = pwm_duty_cycle;
     wire sclk = ui_in[0];
     wire ncs = ui_in[1];
     wire copi = ui_in[2];
