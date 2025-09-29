@@ -1,7 +1,5 @@
 
 module tt_um_uwasic_onboarding_elvis (
-  // Add this inside the module block
-  assign uio_oe = 8'hFF; // Set all IOs to output
   // Create wires to refer to the values of the registers
   input clk,
   input rst_n,
@@ -12,7 +10,8 @@ module tt_um_uwasic_onboarding_elvis (
   output [7:0] uio_oe,
   output [15:0] buffer,
   input [7:0] ui_in
-)
+)  
+  assign uio_oe = 8'hFF; // Set all IOs to output
   wire [7:0] en_reg_out_7_0;
   wire [7:0] en_reg_out_15_8;
   wire [7:0] en_reg_pwm_7_0;
