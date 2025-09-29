@@ -26,29 +26,25 @@ module spi_peripheral (
     always @(posedge sclk or negedge ncs) begin
         if (!ncs) begin
             if (sclk_posedge) begin
-                if (bit_counter == 4'b16) begin
-                    bit_counter <= 4'b0;
-                    case (buffer[7:1])
-                        7'h00: en_reg_out_7_0   <= buffer[15:8];
-                        7'h01: en_reg_out_15_8  <= buffer[15:8];
-                        7'h02: en_reg_pwm_7_0   <= buffer[15:8];
-                        7'h03: en_reg_pwm_15_8  <= buffer[15:8];
-                        7'h04: pwm_duty_cycle   <= buffer[15:8];
-                        default: ;
-                    buffer <= 16'b0;
-                    endcase
+                
                 end else begin
                     buffer <= {buffer[14:0], copi};
                     bit_counter <= bit_counter + 1'b1;
                 end
             end
         end else if (ncs) begin
-            en_reg_out_7_0 <= 8'b0;
-            en_reg_out_15_8 <= 8'b0;
-            en_reg_pwm_7_0 <= 8'b0;
-            en_reg_pwm_15_8 <= 8'b0;
-            pwm_duty_cycle <= 8'b0;
+            if (bit_counter == 4'b16) begin
+                case (buffer[7:1])
+                    7'h00: en_reg_out_7_0   <= buffer[15:8];
+                    7'h01: en_reg_out_15_8  <= buffer[15:8];
+                    7'h02: en_reg_pwm_7_0   <= buffer[15:8];
+                    7'h03: en_reg_pwm_15_8  <= buffer[15:8];
+                    7'h04: pwm_duty_cycle   <= buffer[15:8];
+                    default: ;
+                endcase
+            end
             bit_counter <= 4'b0;
+            buffer <= 16'b0;
         end
         sclk_prev <= sclk;
     end
