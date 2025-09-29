@@ -12,14 +12,13 @@ module spi_peripheral (
     output  wire [7:0] en_reg_pwm_7_0,
     output  wire [7:0] en_reg_pwm_15_8,
     output  wire [7:0] pwm_duty_cycle,
-    output  reg  [15:0] buffer,
+    output  reg  [15:0] buffer
 );
     localparam sclk = ui_in[0];
     localparam ncs = ui_in[1];
     localparam copi = ui_in[2];
         // Process SPI protocol in the clk domain
     reg [3:0] bit_counter = 4'b0;
-    reg [15:0] buffer = 16'b0;
     reg sclk_prev;
     wire sclk_posedge = ~sclk_prev & sclk;
     // Update registers only after the complete transaction has finished and been validated
