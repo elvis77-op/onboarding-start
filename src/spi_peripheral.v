@@ -13,16 +13,16 @@ module spi_peripheral (
     output  wire [7:0] en_reg_pwm_15_8,
     output  wire [7:0] pwm_duty_cycle
 );
-    reg [7:0] en_reg_out_7_0   = 8'b0;
-    reg [7:0] en_reg_out_15_8  = 8'b0;
-    reg [7:0] en_reg_pwm_7_0   = 8'b0;
-    reg [7:0] en_reg_pwm_15_8  = 8'b0;
-    reg [7:0] pwm_duty_cycle   = 8'b0;
-    assign en_reg_out_7_0    = en_reg_out_7_0;
-    assign en_reg_out_15_8   = en_reg_out_15_8;
-    assign en_reg_pwm_7_0    = en_reg_pwm_7_0;
-    assign en_reg_pwm_15_8   = en_reg_pwm_15_8;
-    assign pwm_duty_cycle    = pwm_duty_cycle;
+    reg [7:0] en_reg_out_7_0_r;
+    assign en_reg_out_7_0 = en_reg_out_7_0_r;
+    reg [7:0] en_reg_out_15_8_r;
+    assign en_reg_out_15_8 = en_reg_out_15_8_r;
+    reg [7:0] en_reg_pwm_7_0_r;
+    assign en_reg_pwm_7_0 = en_reg_pwm_7_0_r;
+    reg [7:0] en_reg_pwm_15_8_r;
+    assign en_reg_pwm_15_8 = en_reg_pwm_15_8_r;
+    reg [7:0] pwm_duty_cycle_r;
+    assign pwm_duty_cycle = pwm_duty_cycle_r;
     wire sclk = ui_in[0];
     wire ncs = ui_in[1];
     wire copi = ui_in[2];
@@ -39,13 +39,13 @@ module spi_peripheral (
                 bit_counter <= bit_counter + 1'b1;
             end
         end else if (ncs) begin
-            if (bit_counter == 5'd16) begin
+            if (bit_counter == 5'd16) begin 
                 case (buffer[7:1])
-                    7'h00: en_reg_out_7_0   <= buffer[15:8];
-                    7'h01: en_reg_out_15_8  <= buffer[15:8];
-                    7'h02: en_reg_pwm_7_0   <= buffer[15:8];
-                    7'h03: en_reg_pwm_15_8  <= buffer[15:8];
-                    7'h04: pwm_duty_cycle   <= buffer[15:8];
+                    7'h00: en_reg_out_7_0_r   <= buffer[15:8];
+                    7'h01: en_reg_out_15_8_r  <= buffer[15:8];
+                    7'h02: en_reg_pwm_7_0_r   <= buffer[15:8];
+                    7'h03: en_reg_pwm_15_8_r  <= buffer[15:8];
+                    7'h04: pwm_duty_cycle_r   <= buffer[15:8];
                     default: ;
                 endcase
             end
