@@ -29,7 +29,7 @@ module spi_peripheral (
                 bit_counter <= bit_counter + 1'b1;
             end
         end else if (ncs) begin
-            if (bit_counter == 4'b16) begin
+            if (bit_counter == 4'd16) begin
                 case (buffer[7:1])
                     7'h00: en_reg_out_7_0   <= buffer[15:8];
                     7'h01: en_reg_out_15_8  <= buffer[15:8];
