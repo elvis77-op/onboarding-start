@@ -29,8 +29,12 @@ module spi_peripheral (
     reg [15:0] buffer = 16'b0;
         // Process SPI protocol in the clk domain
     reg [4:0] bit_counter = 5'b0;
-    reg sclk_prev;
-    wire sclk_posedge = ~sclk_prev & sclk;
+    reg sclk_dly1, sclk_dly2;
+    always @(posedge sys_clk) begin
+        sclk_dly1 <= sclk;
+        sclk_dly2 <= sclk_dly1;
+    end
+    wire sclk_posedge = ~sclk_dly2 & sclk_dly1;
     // Update registers only after the complete transaction has finished and been validated
     always @(posedge sclk or posedge ncs) begin
         if (!ncs) begin
@@ -52,7 +56,6 @@ module spi_peripheral (
             bit_counter <= 5'b0;
             buffer <= 16'b0;
         end
-        sclk_prev <= sclk;
     end
 
 endmodule
