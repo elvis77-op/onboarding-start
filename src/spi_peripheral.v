@@ -32,15 +32,13 @@ module spi_peripheral (
     reg sclk_prev;
     wire sclk_posedge = ~sclk_prev & sclk;
     // Update registers only after the complete transaction has finished and been validated
-    always @(posedge sclk or negedge ncs) begin
+    always @(posedge sclk or posedge ncs) begin
         if (!ncs) begin
             if (sclk_posedge) begin
                 buffer <= {buffer[14:0], copi};
                 bit_counter <= bit_counter + 1'b1;
-            end else begin
-                buffer <= 16'b0;
             end
-        end else if (ncs) begin
+        end else begin
             if (bit_counter == 5'd16) begin 
                 case (buffer[7:1])
                     7'h00: en_reg_out_7_0_r   <= buffer[15:8];
