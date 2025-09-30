@@ -24,8 +24,8 @@ module spi_peripheral (
     reg [7:0] pwm_duty_cycle_r;
     assign pwm_duty_cycle = pwm_duty_cycle_r;
     wire sclk = ui_in[0];
-    wire ncs = ui_in[1];
-    wire copi = ui_in[2];
+    wire ncs = ui_in[2];
+    wire copi = ui_in[1];
     reg [15:0] buffer = 16'b0;
         // Process SPI protocol in the clk domain
     reg [4:0] bit_counter = 5'b0;
