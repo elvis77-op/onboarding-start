@@ -37,6 +37,8 @@ module spi_peripheral (
             if (sclk_posedge) begin
                 buffer <= {buffer[14:0], copi};
                 bit_counter <= bit_counter + 1'b1;
+            end else begin
+                buffer <= 16'b0;
             end
         end else if (ncs) begin
             if (bit_counter == 5'd16) begin 
