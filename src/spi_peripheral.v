@@ -7,6 +7,7 @@
 
 module spi_peripheral (
     input  wire [7:0]  ui_in,
+    input  wire       clk,  // system clock
     output  wire [7:0] en_reg_out_7_0,
     output  wire [7:0] en_reg_out_15_8,
     output  wire [7:0] en_reg_pwm_7_0,
@@ -30,7 +31,7 @@ module spi_peripheral (
         // Process SPI protocol in the clk domain
     reg [4:0] bit_counter = 5'b0;
     reg sclk_dly1, sclk_dly2;
-    always @(posedge sys_clk) begin
+    always @(posedge clk) begin
         sclk_dly1 <= sclk;
         sclk_dly2 <= sclk_dly1;
     end
