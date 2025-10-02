@@ -57,19 +57,11 @@ module spi_peripheral (
     // ----------------------------------------------------------
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            bit_counter <= 5'd0;
-            buffer <= 16'd0;
         end else begin
             // Only sample SCLK while chip-select is active (nCS low)
             if ((ncs_sync2 == 1'b0) && sclk_posedge && (bit_counter < 5'd16)) begin
                 buffer <= {copi, buffer[15:1]};
                 bit_counter <= bit_counter + 1'b1;
-            end
-            // If chip-select goes high before we complete 16 bits, just reset (abort)
-            if (ncs_posedge && (bit_counter != 5'd16)) begin
-                // abort incomplete transaction
-                bit_counter <= 5'd0;
-                buffer <= 16'd0;
             end
         end
     end
