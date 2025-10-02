@@ -45,57 +45,56 @@ module spi_peripheral (
     wire ncs_posedge  = (~ncs_sync2) & ncs_sync1;
     wire ncs_negedge  = ncs_sync2 & (~ncs_sync1);
 
-    // ----------------------------------------------------------
-    // Shift in bits on SCLK rising edge ONLY while nCS is low (active)
-    // Note on bit-order:
-    //   Current implementation shifts left and appends new sample into LSB:
-    //     buffer <= {buffer[14:0], copi};
-    //   After receiving sequential bits b0..b15 (b0 first), final buffer will be:
-    //     buffer[15] = b0, buffer[14] = b1, ..., buffer[0] = b15
-    //   Thus buffer[15:8] holds the first byte received and buffer[7:0] holds the second byte.
-    //   Ensure that the SPI master sends bytes in the same order you expect.
-    // ----------------------------------------------------------
+    reg transaction_ready; // Indicates that a transaction is ready to be processed
+    reg transaction_processed; // Indicates that the transaction has been processed
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
+            transaction_ready <= 1'b0;
+        end else if (ncs_sync2 == 1'b0) begin
         end else begin
-            // Only sample SCLK while chip-select is active (nCS low)
-            if ((ncs_sync2 == 1'b0) && sclk_posedge && (bit_counter < 5'd16)) begin
-                buffer <= {copi, buffer[15:1]};
-                bit_counter <= bit_counter + 1'b1;
+            if (ncs_posedge) begin
+                transaction_ready <= 1'b1;
+            end else if (transaction_processed) begin
+                transaction_ready <= 1'b0;
             end
         end
     end
 
 
-    reg transaction_valid; // optional flag if you want to indicate a valid transaction happened
+    
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            en_reg_out_7_0_r <= 8'b0;
-            en_reg_out_15_8_r <= 8'b0;
-            en_reg_pwm_7_0_r <= 8'b0;
-            en_reg_pwm_15_8_r <= 8'b0;
-            pwm_duty_cycle_r <= 8'b0;
-            transaction_valid <= 1'b0;
+            en_reg_out_7_0_r <= 8'h00;
+            en_reg_out_15_8_r <= 8'h00;
+            en_reg_pwm_7_0_r <= 8'h00;
+            en_reg_pwm_15_8_r <= 8'h00;
+            pwm_duty_cycle_r <= 8'h00;
             buffer <= 16'd0;
             bit_counter <= 5'd0;
         end else begin
-            if (ncs_posedge) begin
-                if (bit_counter == 5'd16) begin
-                    case (buffer[7:1])
-                        7'h00: en_reg_out_7_0_r <= buffer[15:8];
-                        7'h01: en_reg_out_15_8_r <= buffer[15:8];
-                        7'h02: en_reg_pwm_7_0_r <= buffer[15:8];
-                        7'h03: en_reg_pwm_15_8_r <= buffer[15:8];
-                        7'h04: pwm_duty_cycle_r <= buffer[15:8];
-                        default: ;
-                    endcase
-                    transaction_valid <= 1'b1;
-                end else begin
-                    // incomplete/invalid transaction -> ignore
-                    transaction_valid <= 1'b0;
+            if (!ncs) begin
+                if (sclk_posedge) begin
+                    if(transaction_ready && !transaction_processed) begin 
+                        if (bit_counter == 5'd16) begin
+                            case (buffer[14:8])
+                                7'h00: en_reg_out_7_0_r <= buffer[7:0];
+                                7'h01: en_reg_out_15_8_r <= buffer[7:0];
+                                7'h02: en_reg_pwm_7_0_r <= buffer[7:0];
+                                7'h03: en_reg_pwm_15_8_r <= buffer[7:0];
+                                7'h04: pwm_duty_cycle_r <= buffer[7:0];
+                                default: ;
+                            endcase
+                            transaction_processed <= 1'b1;
+                        end else begin
+                            buffer <= {buffer[14:0], copi};
+                            bit_counter <= bit_counter + 5'd1;
+                        end
+                    end
                 end
+            end else if (!transaction_ready && transaction_processed) begin
                 buffer <= 16'd0;
                 bit_counter <= 5'd0;
+                transaction_processed <= 1'b0;
             end
         end
     end
