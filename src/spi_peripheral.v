@@ -75,7 +75,7 @@ module spi_peripheral (
             if (!ncs) begin
                 if (sclk_posedge) begin
                     if(transaction_ready && !transaction_processed) begin 
-                        if (bit_counter == 5'd16) begin
+                        if (bit_counter == 5'd16 && buffer[15] == 1'b1) begin
                             case (buffer[14:8])
                                 7'h00: en_reg_out_7_0_r <= buffer[7:0];
                                 7'h01: en_reg_out_15_8_r <= buffer[7:0];
