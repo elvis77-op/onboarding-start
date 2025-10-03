@@ -66,8 +66,6 @@ module spi_peripheral (
                 end
             end
             if (bit_counter == 5'd16 && buffer[15] == 1'b1) begin
-            $display("[%0t] SPI transaction complete: buffer = %b (addr = %h, data = %h)", 
-             $time, buffer, buffer[14:8], buffer[7:0]);
                 case (buffer[14:8])
                     7'h00: en_reg_out_7_0 <= buffer[7:0];
                     7'h01: en_reg_out_15_8 <= buffer[7:0];
